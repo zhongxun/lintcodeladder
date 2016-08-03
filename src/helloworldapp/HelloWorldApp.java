@@ -5,7 +5,7 @@
  */
 package helloworldapp;
 
-import java.util.List;
+import java.io.IOException;
 
 /**
  *
@@ -16,9 +16,22 @@ public class HelloWorldApp {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        //System.out.println("test"); 
+        //System.out.println("test");         
+        StandardBloomFilter.Test();
+        RateLimiterJiuzhang.Test();
+        RateLimiter.Test();
+        WebLogger.Test();
+        TinyUrl2.Test();
+        TinyUrl.Test();
+        WebpageCrawler.Test();
+        TrieSerialization.Test();
+        Trie.Test();
+        UrlParser.Test();
+        InvertedIndex.Test();
+        LFUCache2.Test();
+        MiniCassandra.Test();
         ConsistentHashingII.Test2();
         ConsistentHashingII.Test();
         ConsistentHashingII1.Test();
@@ -43,5 +56,4 @@ public class HelloWorldApp {
          System.out.println("getNewsFeed(2);"+l.size());
          */
     }
-
 }
