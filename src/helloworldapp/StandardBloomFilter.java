@@ -5,9 +5,9 @@
  */
 package helloworldapp;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import javafx.scene.input.KeyCode;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
 /**
  *
@@ -15,56 +15,60 @@ import javafx.scene.input.KeyCode;
  */
 public class StandardBloomFilter {
 
-    private boolean[] bf = new boolean[64];
-    private int[] bfs = {61, 31, 29, 23, 19, 17, 13, 11, 7, 5, 3};
-    private int k;
-    private HashSet<String> hash;
+    class HashFunction {
+
+        private int cap;
+        private int seed;
+
+        public HashFunction(int cap, int seed) {
+            this.cap = cap;
+            this.seed = seed;
+        }
+
+        public int hash(String word) {
+            long sum = 0;
+            for (char c : word.toCharArray()) {
+                sum += sum * this.seed + c;
+                sum %= this.cap;
+            }
+
+            return (int) sum;
+        }
+    }
+
+    private final BitSet bits;
+    private final int k;
+    private final List<HashFunction> hashFunc;
 
     public StandardBloomFilter(int k) {
         // initialize your data structure here
         this.k = k;
-        this.hash = new HashSet<>();
+        hashFunc = new ArrayList<HashFunction>();
+        for (int i = 0; i < k; i++) {
+            hashFunc.add(new HashFunction(100000 + i, 2 * i + 3));
+        }
+
+        bits = new BitSet(100000 + k);
     }
 
     public void add(String word) {
         // Write your code here
-        for (int i = 0; i < this.k; i++) {
-            int r = Hash(word.toCharArray(), bfs[i]);
-            if (r != -1) {
-                bf[r] = true;
-            }
+        for (int i = 0; i < k; i++) {
+            int position = hashFunc.get(i).hash(word);
+            bits.set(position);
         }
-        hash.add(word);
     }
 
     public boolean contains(String word) {
         // Write your code here
-
-        for (int i = 0; i < this.k; i++) {
-            int r = Hash(word.toCharArray(), bfs[i]);
-            if (r != -1) {
-                if (!bf[r]) {
-                    System.out.println("Returned");
-                    return false;
-                }
+        for (int i = 0; i < k; i++) {
+            int position = hashFunc.get(i).hash(word);
+            if (!bits.get(position)) {
+                return false;
             }
         }
 
-        return hash.contains(word);
-    }
-
-    private int Hash(char[] word, int HASH_SIZE) {
-        if (word == null || word.length == 0) {
-            return -1;
-        }
-
-        long hashSum = 0;
-        for (int i = 0; i < word.length; i++) {
-            hashSum = 33 * hashSum + word[i];
-            hashSum %= HASH_SIZE;
-        }
-
-        return (int) hashSum;
+        return true;
     }
 
     private void T() {

@@ -18,7 +18,9 @@ public class HelloWorldApp {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        //System.out.println("test");         
+        //System.out.println("test");
+        CountofSmallerNumber.Test();
+        ReferenceTest.Test();
         StandardBloomFilter.Test();
         RateLimiterJiuzhang.Test();
         RateLimiter.Test();
