@@ -21,6 +21,9 @@ public class HelloWorldApp {
         //System.out.println("test");        
         LastPositionofTarget.Test();
         FindLCASolution.Test();
+        //System.out.println("test");
+        CountofSmallerNumber.Test();
+        ReferenceTest.Test();
         StandardBloomFilter.Test();
         RateLimiterJiuzhang.Test();
         RateLimiter.Test();
