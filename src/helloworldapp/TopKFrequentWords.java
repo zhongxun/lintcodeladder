@@ -66,24 +66,26 @@ public class TopKFrequentWords {
             // Output the top k pairs <word, times> into output buffer.
             // Ps. output.collect(String key, Integer value);
             HashMap<Integer, List<String>> map = new HashMap<Integer, List<String>>();
-            List<Integer> list =  new ArrayList<Integer>();
+            List<Integer> list = new ArrayList<Integer>();
             for (java.util.Map.Entry<String, Integer> entry : this.map.entrySet()) {
                 int v = entry.getValue();
                 if (!map.containsKey(v)) {
                     map.put(v, new ArrayList<String>());
                     list.add(v);
                 }
-                
+
                 map.get(v).add(entry.getKey());
             }
 
             Collections.sort(list);
             Collections.reverse(list);
-            
-            while (this.k > 0) {                
+
+            while (this.k > 0) {
                 for (Integer i : list) {
-                    for (String s : map.get(i)) {
-                        output.collect(s, this.map.get(s));
+                    List<String> words = map.get(i);
+                    Collections.sort(words);
+                    for (String word : words) {
+                        output.collect(word, this.map.get(word));
                         this.k--;
                         if (this.k == 0) {
                             return;

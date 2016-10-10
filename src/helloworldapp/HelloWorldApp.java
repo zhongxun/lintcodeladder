@@ -18,6 +18,9 @@ public class HelloWorldApp {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
+        //System.out.println("test");        
+        LastPositionofTarget.Test();
+        FindLCASolution.Test();
         //System.out.println("test");
         CountofSmallerNumber.Test();
         ReferenceTest.Test();
