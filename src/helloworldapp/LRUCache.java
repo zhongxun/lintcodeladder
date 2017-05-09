@@ -6,6 +6,7 @@
 package helloworldapp;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -13,69 +14,74 @@ import java.util.HashMap;
  */
 public class LRUCache {
 
-    private class Node {
+  private class ListNode {
 
-        Node prev;
-        Node next;
-        int key;
-        int value;
+    ListNode prev;
+    ListNode next;
+    int val;
+    int key;
 
-        public Node(int key, int value) {
-            this.key = key;
-            this.value = value;
-            this.prev = null;
-            this.next = null;
-        }
+    public ListNode(int key, int val) {
+      this.key = key;
+      this.val = val;
     }
+  }
 
-    private int capacity;
-    private HashMap<Integer, Node> hs = new HashMap<Integer, Node>();
-    private Node head = new Node(-1, -1);
-    private Node tail = new Node(-1, -1);
+  private Map<Integer, ListNode> map;
+  private ListNode head;
+  private ListNode tail;
+  private int capacity;
+  
+//  public LRUCache(int capacity) {
+  public LRUCache(int capacity) {
+        // write your code here
+    
+    this.map  = new HashMap<Integer, ListNode>();
+    this.head = new ListNode(-1, -1);
+    this.tail = new ListNode(-1, -1);
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
+    this.capacity = capacity;
+  }
 
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        tail.prev = head;
-        head.next = tail;
+  public int get(int key) {
+    if (!this.map.containsKey(key)) {
+      return -1;
     }
+    
+    ListNode node = this.map.get(key);
+    
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    
+    moveToTail(node);
+    
+    return node.val;
+  }
 
-    public int get(int key) {
-        if (!hs.containsKey(key)) {
-            return -1;
-        }
-
-        // remove current
-        Node current = hs.get(key);
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
-
-        // move current to tail
-        move_to_tail(current);
-
-        return hs.get(key).value;
+  public void set(int key, int value) {
+    if (this.get(key) != -1) {
+      this.map.get(key).val = value;
+      return;
     }
-
-    public void set(int key, int value) {
-        if (get(key) != -1) {
-            hs.get(key).value = value;
-            return;
-        }
-
-        if (hs.size() == capacity) {
-            hs.remove(head.next.key);
-            head.next = head.next.next;
-            head.next.prev = head;
-        }
-
-        Node insert = new Node(key, value);
-        hs.put(key, insert);
-        move_to_tail(insert);
+    
+    if (this.map.size() >= this.capacity) {
+      int removeKey = this.head.next.key;
+      this.head.next.next.prev = this.head;
+      this.head.next = this.head.next.next;
+      this.map.remove(removeKey);
     }
+    
+    ListNode node = new ListNode(key, value);
+    this.map.put(key, node);
+    moveToTail(node);
+  }
 
-    private void move_to_tail(Node current) {
-        current.prev = tail.prev;
-        tail.prev = current;
-        current.prev.next = current;
-        current.next = tail;
-    }
+  private void moveToTail(ListNode node) {
+    ListNode temp = tail.prev;
+    tail.prev = node;
+    node.next = tail;
+    node.prev = temp;
+    temp.next = node;
+  }
 }

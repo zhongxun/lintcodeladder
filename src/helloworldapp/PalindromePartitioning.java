@@ -14,38 +14,53 @@ import java.util.List;
  */
 public class PalindromePartitioning {
 
-    public List<List<String>> partition(String s) {
-        // write your code here
-        List<List<String>> result = new ArrayList<List<String>>();
-        List<String> list = new ArrayList<String>();
-        partition(s.toCharArray(), 0, s.length(), result, list);
-        return result;
+  public List<List<String>> partition(String s) {
+    List<List<String>> results = new ArrayList<List<String>>();
+
+    if (s == null || s.length() == 0) {
+      return results;
     }
 
-    private void partition(char[] arr, int start, int end, List<List<String>> result, List<String> list) {
-        if (start >= end) {
-            result.add(new ArrayList<String>(list));
-            return;
-        }
+    List<String> list = new ArrayList<String>();
 
-        for (int i = start; i < end; i++) {
-            if (isPal(start, i, arr)) {
-                list.add(new String(arr, start, i - start + 1));
-                partition(arr, i + 1, end, result, list);
-                list.remove(list.size() - 1);
-            }
-        }
+    if (s.length() == 1) {
+      list.add(s);
+      results.add(new ArrayList<String>(list));
+      return results;
     }
 
-    private boolean isPal(int start, int end, char[] arr) {
-        int i = start;
-        int j = end;
-        while (i < j) {
-            if (arr[i++] != arr[j--]) {
-                return false;
-            }
-        }
+    partition(s, 0, list, results);
 
-        return true;
+    return results;
+  }
+
+  private void partition(String s, int begin, List<String> list, List<List<String>> results) {
+    if (begin >= s.length()) {
+      results.add(new ArrayList<String>(list));
+      return;
     }
+
+    for (int i = begin; i < s.length(); i++) {
+      String sub = s.substring(begin, i + 1);
+      if (!isPalindrome(sub)) {
+        continue;
+      }
+
+      list.add(sub);
+      partition(s, i + 1, list, results);
+      list.remove(list.size() - 1);
+    }
+  }
+
+  private boolean isPalindrome(String s) {
+
+    for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+      if (s.charAt(i) != s.charAt(j)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 }
